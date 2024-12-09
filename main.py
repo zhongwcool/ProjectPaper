@@ -12,7 +12,7 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
     # 获取当前用户的图片文件夹路径
-    pictures_dir = Path.home() / "Desktop"
+    pictures_dir = Path(os.getcwd())
 
     # Windows Spotlight 图片所在的目录
     spotlight_path = os.path.join(os.getenv('LOCALAPPDATA'),
@@ -23,6 +23,8 @@ def print_hi(name):
     # 导出 Spotlight 图片的目标文件夹
     export_folder = pictures_dir / "Spotlight"
     export_folder.mkdir(exist_ok=True)
+
+    image_count = 0  # Initialize the counter
 
     # 复制并重命名图片
     for filename in os.listdir(spotlight_path):
@@ -36,8 +38,11 @@ def print_hi(name):
             # 如果存在命名冲突，不重复复制
             if not target_file.exists():
                 shutil.copy2(source_file, target_file)
+                relative_target_file = os.path.relpath(target_file, pictures_dir)
+                print(f"新文件: {relative_target_file}")
+                image_count += 1  # Increment the counter
 
-    print(f"Spotlight images have been exported to: {export_folder}")
+    print(f"{image_count} images have been exported to: {export_folder}")
 
 
 # Press the green button in the gutter to run the script.
